@@ -63,22 +63,23 @@ layout_conf = go.Layout(
 ) 
 
 # Create a Dash layout that contains a Graph component:
-app.layout = html.Div([
+app.layout = html.Div(
+    children=[
     html.H1(children='Country/Province comparison '),
-    html.Div(children='Virus spread by country and day'),
+    html.Div(children='Virus spread by country and day', style={
+        'textAlign': 'center',
+        'color': colors['text']
+    }),
     html.Div(children='Showing only countries/regions that have reached 500 confirmed cases'),
-    html.Div([
-        dcc.Graph(
-            id='log_confirmed',
+    dcc.Graph(
+        id='log_confirmed',
             figure={
                 'data': plotdata_conf,
                 'layout': layout_conf
             }
-        )
-    ],style={'paddingTop':35})
-   
+    )
 ])
 
 # Add the server clause:
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
