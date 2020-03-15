@@ -19,9 +19,11 @@ import numpy as np
 app = dash.Dash()
 
 LOC = "data"
-filename = "{}/daily_json.gzip".format(LOC)
+#filename = "{}/daily_json.gzip".format(LOC)
 # Create a DataFrame from the .csv file:
-data = pd.read_json(filename, compression="gzip")
+#
+# data = pd.read_json(filename, compression="gzip")
+data = pd.read_json('https://api.covid19api.com/all')
 
 #adding dates and so on
 data["Date"] = pd.to_datetime(data["Date"], errors='coerce').dt.date
