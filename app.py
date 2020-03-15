@@ -67,8 +67,7 @@ app.layout = html.Div(
     children=[
     html.H1(children='Country/Province comparison '),
     html.Div(children='Virus spread by country and day', style={
-        'textAlign': 'center',
-        'color': colors['text']
+        'textAlign': 'center'
     }),
     html.Div(children='Showing only countries/regions that have reached 500 confirmed cases'),
     dcc.Graph(
