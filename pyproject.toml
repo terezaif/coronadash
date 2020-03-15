@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "playground"
+version = "0.1.1"
+description = "plotly"
+readme = "README.md"
+authors = ["Data Science Team"]
+packages = [
+  { include = "utils"},
+]
+
+[tool.poetry.dependencies]
+python = "3.8.2"
+thrift-sasl= "*"
+thrift = "*"
+pandas = "*"
+numpy = "*"
+scipy = "*"
+impyla = "*"
+matplotlib = "*"
+pyhive = "*"
+sklearn = "*"
+pandarallel = "*"
+seaborn = "*"
+jupyter = "*"
+jupyter-client="5.2.4"
+jupyter-console="6.0.0"
+jupyter-core="4.4.0"
+jupyterlab = "*"
+keplergl = "*"
+statsmodels = "*"
+chardet="3.0.4"
+click="6.7"
+Cython="0.28.2"
+dash="0.21.0"
+dash-core-components="0.22.1"
+dash-html-components="0.10.0"
+dash-renderer="0.12.1"
+decorator="4.3.0"
+nbformat="4.4.0"
+pandas-datareader="0.6.0"
+plotly="2.5.1"
+python-dateutil="2.7.2"
+pytz="2018.4"
+requests="2.18.4"
+urllib3="1.22"
+Werkzeug="0.14.1"
+
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.0.1"
+pytest-cov = "^2.7"
+black = "19.3b0"
+pre-commit = "^1.18"
+flake8 = "^3.7.9"
+
+[tool.black]
+line-length = 120
+
+[build-system]
+requires = ["poetry>=1.0.0"]
+build-backend = "poetry.masonry.api"
