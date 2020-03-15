@@ -18,6 +18,8 @@ import numpy as np
 # Launch the application:
 app = dash.Dash()
 
+server = app.server
+
 LOC = "data"
 #filename = "{}/daily_json.gzip".format(LOC)
 # Create a DataFrame from the .csv file:
