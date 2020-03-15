@@ -15,8 +15,10 @@ import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 # Launch the application:
-app = dash.Dash()
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server
 
