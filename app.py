@@ -70,10 +70,9 @@ layout_conf = go.Layout(
 app.layout = html.Div(
     children=[
     html.H1(children='Country/Province comparison '),
-    html.Div(children='Virus spread by country and day', style={
-        'textAlign': 'center'
-    }),
+    html.Div(children='Virus spread by country and day'),
     html.Div(children='Showing only countries/regions that have reached 500 confirmed cases'),
+    html.A('Data source', href='https://covid19api.com'),
     dcc.Graph(
         id='log_confirmed',
             figure={
