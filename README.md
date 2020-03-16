@@ -14,3 +14,7 @@
 # Deployed to Heroku
 
 [dashvirus](https://dashvirus.herokuapp.com)
+
+# How it looks like
+
+![alt text](https://github.com/terezaif/coronadash/imgs/Screenshot.png)
