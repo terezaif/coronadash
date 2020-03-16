@@ -17,4 +17,4 @@
 
 # How it looks like
 
-![alt text](https://github.com/terezaif/coronadash/imgs/Screenshot.png)
+![alt text](imgs/Screenshot.png)
