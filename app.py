@@ -32,27 +32,31 @@ data = pd.read_json('https://api.covid19api.com/all')
 #adding dates and so on
 data["Date"] = pd.to_datetime(data["Date"], errors='coerce').dt.date
 data["CountryProvince"] = data["Country"]+data["Province"]
-temp = data[(data['Status']=='confirmed') & (data['Cases']>0)].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDate"})
+#getting start date of contagion
+temp_first = data[(data['Status']=='confirmed') & (data['Cases']>0)].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDate"})
+temp_max = data[(data['Status']=='confirmed') & (data['Cases']>=0)].groupby(['CountryProvince'])['Cases'].max().reset_index().rename(columns={"Cases": "MaxCases"})
 #adding start date of contagion to data
-data = data.set_index('CountryProvince').join(temp.set_index('CountryProvince'))
+data = data.set_index('CountryProvince')
+data = data.join(temp_first.set_index('CountryProvince'))
+data = data.join(temp_max.set_index('CountryProvince'))
 data["DaysSinceConfirmed"] = np.where(data['Date']>=data['FirstDate'], (data['Date']-data['FirstDate']).dt.days, 0)
-temp_max = data[(data['Status']=='confirmed') & (data['Cases']>=0)].groupby(['CountryProvince'])['Cases'].max().reset_index()
 
 status = "confirmed"
-provinces = data.index.unique()
-plotdata_conf = []
+temp = data[(data["MaxCases"]>=500) & (data["Status"] == status)].copy()
+
+provinces = temp.index.unique()
+plotdata = []
 for province in provinces:
-    if (temp_max.loc[temp_max["CountryProvince"]==province]["Cases"].values[0] >=500):
     # What should go inside this Scatter call?
-        province_data = data[(data.index == province) & (data["Status"] == status)]
-        trace = go.Scatter(x = province_data.DaysSinceConfirmed, 
-                           y = province_data.Cases, 
-                           mode='lines', 
-                           name = province,
-                           text = data['Date'],
-                           hoverinfo = "text+x+name+y"
-                          )
-        plotdata_conf.append(trace)
+    province_data = temp[temp.index == province]
+    trace = go.Scatter(x = province_data.DaysSinceConfirmed, 
+                       y = province_data.Cases, 
+                       mode='lines', 
+                       name = province,
+                       text = province_data['Date'],
+                       hoverinfo = "text+x+name+y"
+                    )
+    plotdata.append(trace)
 
 layout_conf = go.Layout(
     title = '(Logarithmic) Daily confirmed cases per Country/Province where more than 1000 cases have been registered',
@@ -73,7 +77,7 @@ app.layout = html.Div(
     dcc.Graph(
         id='log_confirmed',
             figure={
-                'data': plotdata_conf,
+                'data': plotdata,
                 'layout': layout_conf
             }
     )
