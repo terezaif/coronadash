@@ -63,9 +63,13 @@ for province in provinces:
 layout_conf = go.Layout(
     title = '(Logarithmic) Daily confirmed cases per Country/Province where more than {} cases have been registered'.format(min_total_cases),
     xaxis = dict(title = 'Day since first {} confirmed local case'.format(min_cases)), # x-axis label
-    yaxis = dict(title = 'Confirmed cases'), # y-axis label
+    yaxis = dict(title = 'Confirmed cases', range=[2,5.5]), # y-axis label
     yaxis_type='log',
-    hovermode='closest'
+    hovermode='closest',
+    height=800,
+    autosize=True,
+    margin=dict(l=50, r=20, b=100, t=100),
+    font=dict(family="Courier New, monospace")
 ) 
 
 # Create a Dash layout that contains a Graph component:
@@ -73,7 +77,7 @@ app.layout = html.Div(
     children=[
     html.H1(children='Country/Province comparison '),
     html.Div(children='Virus spread by country and day'),
-    html.Div(children='Showing only countries/regions that have reached {} confirmed cases'.format(min_total_cases)),
+    html.Div(children='Showing only countries/regions that have reached {} confirmed cases, day zero is set at {} confirmed cases'.format(min_total_cases, min_cases)),
     html.A('Data source', href='https://covid19api.com'),
     dcc.Graph(
         id='log_confirmed',
@@ -82,7 +86,9 @@ app.layout = html.Div(
                 'layout': layout_conf
             }
     )
-])
+],
+style={'width':1200, 'height':800}
+)
 
 # Add the server clause:
 if __name__ == '__main__':
