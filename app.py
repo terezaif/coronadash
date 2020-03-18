@@ -34,7 +34,7 @@ data["Date"] = pd.to_datetime(data["Date"], errors='coerce').dt.date
 data["CountryProvince"] = data["Country"]+data["Province"]
 #getting start date of contagion
 min_cases = 100
-temp_first = data[(data['Status']=='confirmed') & (data['Cases']>0)].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDate"})
+temp_first = data[(data['Status']=='confirmed') & (data['Cases']>min_cases)].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDate"})
 temp_max = data[(data['Status']=='confirmed') & (data['Cases']>=min_cases)].groupby(['CountryProvince'])['Cases'].max().reset_index().rename(columns={"Cases": "MaxCases"})
 #adding start date of contagion to data
 data = data.set_index('CountryProvince')
