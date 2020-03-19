@@ -133,13 +133,14 @@ app.layout = html.Div(
     html.Div(children='Virus spread by country and day'),
     html.Div(children='Showing only countries/regions that have reached {} confirmed cases, day zero is set at {} confirmed cases'.format(min_total_cases, min_cases)),
     html.A('Data source', href='https://covid19api.com'),
+    html.Div(children='Click to select out a region, double click to go in isolate a region mode'),
+    html.Br(),
     dcc.Graph(
         id='log_confirmed',
             figure= fig_confirmed
     ),
     dcc.Graph(id="log_deaths", className="div-card", figure=fig_deaths),
-],
-style={'width':1200, 'height':800}
+], style = {"font-family": "Courier New, monospace", 'width':1200, 'height':800}
 )
 
 # Add the server clause:
