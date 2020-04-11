@@ -80,7 +80,7 @@ def create_confirmed_line_plot(df):
         font=dict(family="Courier New, monospace")
     ) 
 
-    fig = dict(data=plotdata, layout=layout)
+    fig = go.Figure(data = plotdata, layout = layout)
     return fig
 
 def create_deaths_line_plot(df):
@@ -112,7 +112,7 @@ def create_deaths_line_plot(df):
         font=dict(family="Courier New, monospace")
     ) 
 
-    fig = dict(data=plotdata, layout=layout)
+    fig = go.Figure(data = plotdata, layout = layout)
     return fig
 
 fig_confirmed = create_confirmed_line_plot(temp)
