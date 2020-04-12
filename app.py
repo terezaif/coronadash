@@ -48,7 +48,11 @@ data["DaysSinceConfirmed"] = np.where(data['Date']>=data['FirstDate'], (data['Da
 data["DaysSinceDeaths"] = np.where(data['Date']>=data['FirstDateD'], (data['Date']-data['FirstDateD']).dt.days, 0)
 
 temp = data[(data["MaxCases"]>=min_total_cases)].copy()
-data["DaysSinceDeaths"] = np.where(data['Date']>=data['FirstDateD'], (data['Date']-data['FirstDateD']).dt.days, 0)
+#data["DaysSinceDeaths"] = np.where(data['Date']>=data['FirstDateD'], (data['Date']-data['FirstDateD']).dt.days, 0)
+
+# sums the active, confirmed, deaths and recovered for each countryprovince
+temp = temp.groupby([temp.index,'Date','FirstDate', 'MaxCases', 'FirstDateD', 'DaysSinceConfirmed','DaysSinceDeaths']).agg({
+        'Active':np.sum, 'Confirmed':np.sum, 'Deaths':np.sum, 'Recovered':np.sum}).reset_index().set_index('CountryProvince')
 
 def create_confirmed_line_plot(df):
     status = "Confirmed"
