@@ -36,9 +36,9 @@ data["CountryProvince"] = data["Country"]+data["Province"]
 min_cases = 100
 min_d_cases = 10
 min_total_cases = 500
-temp_first = data[(data['Status']=='confirmed') & (data['Cases']>min_cases)].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDate"})
-temp_max = data[(data['Status']=='confirmed') & (data['Cases']>=min_cases)].groupby(['CountryProvince'])['Cases'].max().reset_index().rename(columns={"Cases": "MaxCases"})
-temp_first_d = data[(data['Status']=='deaths') & (data['Cases']>min_d_cases)].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDateD"})
+temp_first = data[data['Confirmed']>min_cases].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDate"})
+temp_max = data[data['Confirmed']>min_cases].groupby(['CountryProvince'])['Confirmed'].max().reset_index().rename(columns={"Confirmed": "MaxCases"})
+temp_first_d = data[data['Deaths']>min_d_cases].groupby(['CountryProvince'])['Date'].min().reset_index().rename(columns={"Date": "FirstDateD"})
 #adding start date of contagion to data
 data = data.set_index('CountryProvince')
 data = data.join(temp_first.set_index('CountryProvince'))
@@ -48,19 +48,23 @@ data["DaysSinceConfirmed"] = np.where(data['Date']>=data['FirstDate'], (data['Da
 data["DaysSinceDeaths"] = np.where(data['Date']>=data['FirstDateD'], (data['Date']-data['FirstDateD']).dt.days, 0)
 
 temp = data[(data["MaxCases"]>=min_total_cases)].copy()
-data["DaysSinceDeaths"] = np.where(data['Date']>=data['FirstDateD'], (data['Date']-data['FirstDateD']).dt.days, 0)
+#data["DaysSinceDeaths"] = np.where(data['Date']>=data['FirstDateD'], (data['Date']-data['FirstDateD']).dt.days, 0)
+
+# sums the active, confirmed, deaths and recovered for each countryprovince
+temp = temp.groupby([temp.index,'Date','FirstDate', 'MaxCases', 'FirstDateD', 'DaysSinceConfirmed','DaysSinceDeaths']).agg({
+        'Active':np.sum, 'Confirmed':np.sum, 'Deaths':np.sum, 'Recovered':np.sum}).reset_index().set_index('CountryProvince')
 
 def create_confirmed_line_plot(df):
-    status = "confirmed"
+    status = "Confirmed"
     
     provinces = df.index.unique()
     plotdata = []
 
     for province in provinces:
         # What should go inside this Scatter call?
-        province_data = df[(df.index == province) & (df["Status"] == status)]
+        province_data = df[df.index == province]
         trace = go.Scatter(x = province_data.DaysSinceConfirmed, 
-                        y = province_data.Cases, 
+                        y = province_data[status], 
                         mode='lines', 
                         name = province,
                         text = province_data['Date'],
@@ -80,19 +84,19 @@ def create_confirmed_line_plot(df):
         font=dict(family="Courier New, monospace")
     ) 
 
-    fig = dict(data=plotdata, layout=layout)
+    fig = go.Figure(data = plotdata, layout = layout)
     return fig
 
 def create_deaths_line_plot(df):
-    status = "deaths"
+    status = "Deaths"
     provinces = df.index.unique()
     plotdata = []
 
     for province in provinces:
         # What should go inside this Scatter call?
-        province_data = df[(df.index == province) & (df["Status"] == status)]
+        province_data = df[df.index == province]
         trace = go.Scatter(x = province_data.DaysSinceDeaths, 
-                        y = province_data.Cases, 
+                        y = province_data[status], 
                         mode='lines', 
                         name = province,
                         text = province_data['Date'],
@@ -112,7 +116,7 @@ def create_deaths_line_plot(df):
         font=dict(family="Courier New, monospace")
     ) 
 
-    fig = dict(data=plotdata, layout=layout)
+    fig = go.Figure(data = plotdata, layout = layout)
     return fig
 
 fig_confirmed = create_confirmed_line_plot(temp)
